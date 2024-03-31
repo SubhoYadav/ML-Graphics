@@ -1,0 +1,12 @@
+body {
+  background-color: skyblue;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+}
+
+#sketchpad-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

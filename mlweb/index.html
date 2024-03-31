@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Data Creator</title>
+</head>
+<body>
+  <div id="sketchpad-container">
+    <h1>Data Creator</h1>
+    <input type="text" name="user" placeholder="Type your name">
+    <button onclick="onSave()">Save</button>
+    <p id="toast"></p>
+    <button class="undoBtn" onclick="onNext()" style="visibility: hidden;">
+      Next
+    </button>
+    <div id="sketchpad"></div>
+    <button class="undoBtn" style="visibility: hidden;" onclick="onUndo()">Undo</button>
+  </div>
+  
+  <script src="js/sketchpad.js"></script>
+  <script src="js/draw.js"></script>
+  <script>
+    const sketchpad = new SketchPad("sketchpad");
+    const objects = ["Guitar", "boat", "fish", "scissors", "apple logo"]
+    let currentIndex = 0
+    const data = {
+      student: "",
+      session: new Date().getTime(),
+      drawings: {}
+    }
+
+    function onSave () {
+      const inputBx = document.getElementsByName("user");
+      if (!inputBx[0].value) {
+        document.getElementById("toast").innerHTML = "Please enter your name"
+      }
+      else {
+        document.getElementById("toast").innerHTML = `Draw a ${objects[currentIndex]}`
+        sketchpad.displayCanvas()
+        for (let element of document.getElementsByClassName("undoBtn")) {
+          element.style = "visibility: visible;"
+        }
+      }
+    }
+    
+    function onNext() {
+      if (currentIndex < (objects.length-1)) {
+        const label = objects[currentIndex]
+        data.drawings[label] = sketchpad.paths
+        currentIndex++;
+        sketchpad.reset()
+        document.getElementById("toast").innerHTML = `Draw a ${objects[currentIndex]}`
+      }
+      else {
+        const label = objects[currentIndex]
+        data.drawings[label] = sketchpad.paths
+        document.getElementById("toast").innerHTML = `Here is the data provided by you!`
+        sketchpad.reset();
+
+        // getting the data file downloaded
+        data.student = document.getElementsByName("user")[0].value
+        
+        const dnldLnk = document.createElement('a');
+        dnldLnk.setAttribute("href", "data:text/plain;charset=utf-8, "+
+        encodeURIComponent(JSON.stringify(data)))
+
+        const filename = data.session+".json"
+        dnldLnk.setAttribute("download", filename)
+
+        dnldLnk.style.display = "none"
+        document.body.appendChild(dnldLnk);
+        dnldLnk.click();
+        document.body.removeChild(dnldLnk)
+      }
+    }
+
+    function onUndo() {
+      sketchpad.undoLastAction()
+    }
+  </script>
+</body>
+</html>
