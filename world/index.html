@@ -1,69 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My World</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <h1>My World</h1>
-  <canvas id="myCanvas"></canvas>
-  <div id="controls">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My World</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>My World</h1>
+    <canvas id="myCanvas"></canvas>
+    <!-- <div id="controls">
     <button onclick="addRandomPoint()">Add Point</button>
-  </div>
-  
-  <script src="./js/math/graph.js"></script>
-  <script src="./js/primitives/point.js"></script>
-  <script src="./js/primitives/segment.js"></script>
+    <button onclick="addRandomSegment()">Add Segment</button>
+    <button onclick="removeRandomSegment()">Remove Segment</button>
+    <button onclick="removeRandomPoint()">Remove Point</button>
+  </div> -->
 
-  <script>
-    const addRandomPoint = () => {
-      graph.addPoint(
-        new Point(
-          Math.random() * myCanvas.width,
-          Math.random() * myCanvas.height,
-        )
-      )
+    <script src="./js/math/graph.js"></script>
+    <script src="./js/math/utils.js"></script>
+    <script src="./js/graphEditor.js"></script>
+    <script src="./js/primitives/point.js"></script>
+    <script src="./js/primitives/segment.js"></script>
 
-      // Area of the canvas we want to clear out
-      ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
-      graph.draw(ctx)
-    }
-    const myCanvas = document.getElementById('myCanvas');
-    myCanvas.width = 1000
-    myCanvas.height = 700
-    
-    // getting the context of the canvas element to draw on the bitmapped area
-    const ctx = myCanvas.getContext("2d")
+    <script>
+      const myCanvas = document.getElementById("myCanvas");
+      myCanvas.width = 1000;
+      myCanvas.height = 700;
 
-    /**
-     * (0,0) ------------------------> (+X)
-     * |
-     * |
-     * |
-     * |
-     * |
-     * |
-     * |
-     * V
-     * (+Y)
-     */
+      // getting the context of the canvas element to draw on the bitmapped area
+      const ctx = myCanvas.getContext("2d");
 
-    const p1 = new Point(200, 200);
-    const p2 = new Point(500, 200);
-    const p3 = new Point(400, 300);
-    const p4 = new Point(500, 500);
+      /**
+       * (0,0) ------------------------> (+X)
+       * |
+       * |
+       * |
+       * |
+       * |
+       * |
+       * |
+       * V
+       * (+Y)
+       */
 
-    const s1 = new Segment(p1,p2);
-    const s2 = new Segment(p1,p3);
-    const s3 = new Segment(p1,p4);
-    const s4 = new Segment(p2,p4);
+      const p1 = new Point(200, 200);
+      const p2 = new Point(500, 200);
+      const p3 = new Point(400, 300);
+      const p4 = new Point(500, 500);
 
-    // Trying to implement a spatial graph
-    const graph = new Graph([p1, p2, p3, p4], [s1, s2, s3, s4  ]);
-    graph.draw(ctx)
-  </script>
-</body>
+      const s1 = new Segment(p1, p2);
+      const s2 = new Segment(p1, p3);
+      const s3 = new Segment(p1, p4);
+      const s4 = new Segment(p2, p4);
+
+      // Trying to implement a spatial graph
+      const graph = new Graph([p1, p2, p3, p4], [s1, s2, s3, s4]);
+
+      const graphEditor = new GraphEditor(myCanvas, graph);
+
+      animate();
+      function animate() {
+        ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+        graphEditor.display();
+        requestAnimationFrame(animate);
+        /* This method tells the browser that I wish to perform an animation and the browser calls the specified callback, in this case animate before the next repaint*/
+      }
+    </script>
+  </body>
 </html>

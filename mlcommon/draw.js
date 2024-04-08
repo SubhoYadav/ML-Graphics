@@ -18,3 +18,7 @@ const draw = {
     }
   }
 }
+
+if (module != undefined) {
+  module.exports = draw
+}
